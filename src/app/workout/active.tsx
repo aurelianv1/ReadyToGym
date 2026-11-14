@@ -183,13 +183,21 @@ export default function ActiveWorkoutScreen() {
           <Ionicons name="time-outline" size={18} color={colors.muted} />
           <Clock since={workout.started_at} style={styles.topValue} />
         </View>
-        {restStart && (
-          <Pressable style={styles.restPill} onPress={() => setRestStart(null)}>
+        {restStart != null && (
+          <View style={styles.restPill}>
             <Ionicons name="hourglass-outline" size={16} color={colors.accent} />
             <Text style={styles.restLabel}>Pauză</Text>
             <Clock since={restStart} style={styles.restValue} />
-            <Ionicons name="close" size={16} color={colors.muted} />
-          </Pressable>
+            <Pressable
+              onPress={() => setRestStart(null)}
+              hitSlop={8}
+              style={({ pressed }) => [styles.stopBtn, pressed && { opacity: 0.6 }]}
+              accessibilityLabel="Oprește cronometrul de pauză"
+            >
+              <Ionicons name="stop" size={12} color={colors.danger} />
+              <Text style={styles.stopText}>Stop</Text>
+            </Pressable>
+          </View>
         )}
       </View>
 
@@ -331,6 +339,17 @@ const styles = StyleSheet.create({
   },
   restLabel: { color: colors.muted, fontSize: 14 },
   restValue: { color: colors.accent, fontSize: 15, fontWeight: '800', fontVariant: ['tabular-nums'] },
+  stopBtn: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 4,
+    marginLeft: spacing.xs,
+    paddingVertical: 4,
+    paddingHorizontal: spacing.sm,
+    borderRadius: 999,
+    backgroundColor: 'rgba(239, 68, 68, 0.15)',
+  },
+  stopText: { color: colors.danger, fontSize: 13, fontWeight: '800' },
   finishBtn: {
     backgroundColor: colors.accent,
     borderRadius: radius.sm,
