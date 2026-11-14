@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "Jurnal Sală",
-    "slug": "jurnal-sala",
+    "name": "ReadyToGym",
+    "slug": "ready-to-gym",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -17,7 +17,7 @@
         "monochromeImage": "./assets/android-icon-monochrome.png"
       },
       "predictiveBackGestureEnabled": false,
-      "package": "com.aurelian.jurnalsala"
+      "package": "com.aurelian.readytogym"
     },
     "web": {
       "favicon": "./assets/favicon.png"
@@ -28,7 +28,7 @@
       "expo-sqlite",
       "expo-font"
     ],
-    "scheme": "jurnalsala",
+    "scheme": "readytogym",
     "experiments": {
       "typedRoutes": true
     }
