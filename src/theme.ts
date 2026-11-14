@@ -10,6 +10,10 @@ export const colors = {
   success: '#22C55E',
   successBg: 'rgba(34, 197, 94, 0.15)',
   danger: '#EF4444',
+  // Macros
+  protein: '#60A5FA',
+  carbs: '#FBBF24',
+  fat: '#F472B6',
 };
 
 export const spacing = {

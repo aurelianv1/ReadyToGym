@@ -78,3 +78,38 @@ export function formatRelativeDay(ms: number) {
   if (days < 7) return `acum ${days} zile`;
   return formatDate(ms);
 }
+
+// ---------- Days (nutrition diary) ----------
+
+/** Local calendar day as "YYYY-MM-DD". */
+export function dayKey(date = new Date()) {
+  const m = String(date.getMonth() + 1).padStart(2, '0');
+  const d = String(date.getDate()).padStart(2, '0');
+  return `${date.getFullYear()}-${m}-${d}`;
+}
+
+export function parseDayKey(key: string) {
+  const [y, m, d] = key.split('-').map(Number);
+  return new Date(y, m - 1, d);
+}
+
+export function shiftDay(key: string, delta: number) {
+  const date = parseDayKey(key);
+  date.setDate(date.getDate() + delta);
+  return dayKey(date);
+}
+
+/** "Azi", "Ieri", "Mâine", otherwise "Vineri, 14 nov." */
+export function formatDayLabel(key: string) {
+  const today = dayKey();
+  if (key === today) return 'Azi';
+  if (key === shiftDay(today, -1)) return 'Ieri';
+  if (key === shiftDay(today, 1)) return 'Mâine';
+  return formatDate(parseDayKey(key).getTime());
+}
+
+/** Grams of a macro: one decimal below 10 g, whole numbers above. */
+export function formatGrams(g: number) {
+  if (g < 10) return String(Math.round(g * 10) / 10);
+  return String(Math.round(g));
+}

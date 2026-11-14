@@ -1,6 +1,6 @@
 import type { SQLiteDatabase } from 'expo-sqlite';
 
-const DATABASE_VERSION = 2;
+const DATABASE_VERSION = 3;
 
 const SEED_EXERCISES: [name: string, muscleGroup: string][] = [
   ['Împins la piept cu haltera (Bench Press)', 'Piept'],
@@ -119,7 +119,48 @@ export async function migrateDbIfNeeded(db: SQLiteDatabase) {
     currentVersion = 2;
   }
 
-  // Future migrations go here: if (currentVersion === 2) { ...; currentVersion = 3; }
+  if (currentVersion === 2) {
+    await db.execAsync(`
+      -- Saved foods; nutrition values are per 100 g.
+      CREATE TABLE foods (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        name TEXT NOT NULL,
+        kcal REAL NOT NULL,
+        protein REAL NOT NULL DEFAULT 0,
+        carbs REAL NOT NULL DEFAULT 0,
+        fat REAL NOT NULL DEFAULT 0,
+        default_grams REAL,
+        created_at INTEGER NOT NULL,
+        last_used_at INTEGER
+      );
+
+      -- What was eaten. Totals are stored (not recomputed from foods) so editing
+      -- or deleting a food never rewrites past days. grams is NULL for quick adds.
+      CREATE TABLE food_entries (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        day TEXT NOT NULL,
+        meal TEXT NOT NULL,
+        food_id INTEGER REFERENCES foods(id) ON DELETE SET NULL,
+        name TEXT NOT NULL,
+        grams REAL,
+        kcal REAL NOT NULL,
+        protein REAL NOT NULL DEFAULT 0,
+        carbs REAL NOT NULL DEFAULT 0,
+        fat REAL NOT NULL DEFAULT 0,
+        created_at INTEGER NOT NULL
+      );
+
+      CREATE INDEX idx_entries_day ON food_entries(day);
+
+      CREATE TABLE settings (
+        key TEXT PRIMARY KEY,
+        value TEXT NOT NULL
+      );
+    `);
+    currentVersion = 3;
+  }
+
+  // Future migrations go here: if (currentVersion === 3) { ...; currentVersion = 4; }
 
   await db.execAsync(`PRAGMA user_version = ${DATABASE_VERSION}`);
 }

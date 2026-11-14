@@ -47,6 +47,10 @@ export default function RootLayout() {
           />
           <Stack.Screen name="exercise/[id]" options={{ title: 'Exercițiu' }} />
           <Stack.Screen name="routine/edit" options={{ title: 'Rutină' }} />
+          <Stack.Screen name="nutrition/add" options={{ title: 'Adaugă', presentation: 'modal' }} />
+          <Stack.Screen name="nutrition/entry" options={{ title: '' }} />
+          <Stack.Screen name="nutrition/food" options={{ title: 'Aliment' }} />
+          <Stack.Screen name="nutrition/targets" options={{ title: 'Ținte zilnice' }} />
         </Stack>
       </ThemeProvider>
     </SQLiteProvider>
