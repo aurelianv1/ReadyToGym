@@ -21,7 +21,6 @@ export default function NutritionScreen() {
     [day],
   );
 
-  // Avoid flashing the previous day's numbers while the new day loads.
   const entries = data?.day === day ? data.entries : [];
   const targets = data?.targets ?? null;
   const total = sumMacros(entries);

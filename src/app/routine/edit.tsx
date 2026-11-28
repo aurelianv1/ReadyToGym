@@ -14,7 +14,6 @@ type Item = RoutineItem & { key: number };
 const DEFAULT_SETS = 3;
 const MAX_SETS = 10;
 
-/** Create (no `id` param) or edit (`id` param) a routine. Nothing is saved until "Salvează". */
 export default function RoutineEditScreen() {
   const { id } = useLocalSearchParams<{ id?: string }>();
   const routineId = id ? Number(id) : undefined;
@@ -39,7 +38,6 @@ export default function RoutineEditScreen() {
     });
   }, [db, routineId]);
 
-  // Leave only after the state that disables the unsaved-changes guard has rendered.
   useEffect(() => {
     if (leaving) router.back();
   }, [leaving]);

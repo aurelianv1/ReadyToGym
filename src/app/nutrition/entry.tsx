@@ -33,12 +33,12 @@ import { colors, radius, spacing } from '@/theme';
 import { formatGrams, formatWeight, parseNumber } from '@/utils/format';
 
 type Params = {
-  entryId?: string; // edit an existing diary entry
-  foodId?: string; // log an amount of a saved food
-  quick?: string; // quick add (calories/macros typed in)
+  entryId?: string;
+  foodId?: string;
+  quick?: string;
   day?: string;
   meal?: MealKey;
-  fromAdd?: string; // opened from the add screen -> close both when done
+  fromAdd?: string;
 };
 
 type Mode =

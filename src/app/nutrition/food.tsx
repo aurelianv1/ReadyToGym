@@ -10,11 +10,6 @@ import { deleteFood, getFood, kcalFromMacros, saveFood, type MealKey } from '@/d
 import { colors, radius, spacing } from '@/theme';
 import { formatWeight, parseNumber } from '@/utils/format';
 
-/**
- * Create or edit a saved food (values per 100 g).
- * - `id`: edit an existing food.
- * - `day` + `meal`: created from the add flow; continues to logging the amount.
- */
 export default function FoodScreen() {
   const params = useLocalSearchParams<{
     id?: string;
@@ -62,7 +57,6 @@ export default function FoodScreen() {
       Alert.alert('Lipsește numele', 'Scrie un nume pentru aliment.');
       return;
     }
-    // If calories were left empty, use the value implied by the macros.
     const finalKcal = kcalNum ?? (derivedKcal > 0 ? Math.round(derivedKcal) : null);
     if (finalKcal == null) {
       Alert.alert('Lipsesc valorile', 'Completează caloriile sau macronutrienții (la 100 g).');

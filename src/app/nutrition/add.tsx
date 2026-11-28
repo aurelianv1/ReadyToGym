@@ -10,7 +10,6 @@ import { normalizeName } from '@/db/queries';
 import { useFocusData } from '@/hooks/useFocusData';
 import { colors, radius, spacing } from '@/theme';
 
-/** Pick what to log: a saved food, a new food, or a quick add. */
 export default function AddFoodScreen() {
   const { day, meal } = useLocalSearchParams<{ day: string; meal: MealKey }>();
   const { data } = useFocusData(listFoods);

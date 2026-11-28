@@ -7,7 +7,6 @@ export type Macros = { kcal: number; protein: number; carbs: number; fat: number
 export type Food = Macros & {
   id: number;
   name: string;
-  /** Typical portion, used as the default amount when logging. */
   default_grams: number | null;
   created_at: number;
   last_used_at: number | null;
@@ -19,7 +18,6 @@ export type FoodEntry = Macros & {
   meal: MealKey;
   food_id: number | null;
   name: string;
-  /** null for quick adds (calories/macros typed in directly). */
   grams: number | null;
   created_at: number;
 };
@@ -35,7 +33,6 @@ export const MEALS: { key: MealKey; label: string }[] = [
 
 export const ZERO_MACROS: Macros = { kcal: 0, protein: 0, carbs: 0, fat: 0 };
 
-/** Nutrition for `grams` of a food whose values are per 100 g. */
 export function macrosFor(per100: Macros, grams: number): Macros {
   const f = grams / 100;
   return {
@@ -58,12 +55,9 @@ export function sumMacros(items: Macros[]): Macros {
   );
 }
 
-/** Energy implied by the macros (4 / 4 / 9 kcal per gram). */
 export function kcalFromMacros(m: { protein: number; carbs: number; fat: number }) {
   return m.protein * 4 + m.carbs * 4 + m.fat * 9;
 }
-
-// ---------- Targets ----------
 
 const TARGETS_KEY = 'nutrition_targets';
 
@@ -88,9 +82,6 @@ export async function setTargets(db: SQLiteDatabase, targets: Macros) {
   );
 }
 
-// ---------- Foods ----------
-
-/** Recently used foods first, then the rest alphabetically. */
 export function listFoods(db: SQLiteDatabase) {
   return db.getAllAsync<Food>(
     `SELECT * FROM foods
@@ -102,10 +93,6 @@ export function getFood(db: SQLiteDatabase, id: number) {
   return db.getFirstAsync<Food>('SELECT * FROM foods WHERE id = ?', id);
 }
 
-/**
- * Creates (no id) or updates (with id) a food. Returns its id, or null if
- * another food already has the same name.
- */
 export async function saveFood(
   db: SQLiteDatabase,
   food: Macros & { id?: number; name: string; default_grams: number | null },
@@ -146,8 +133,6 @@ export async function saveFood(
 export async function deleteFood(db: SQLiteDatabase, id: number) {
   await db.runAsync('DELETE FROM foods WHERE id = ?', id);
 }
-
-// ---------- Diary entries ----------
 
 export function getDayEntries(db: SQLiteDatabase, day: string) {
   return db.getAllAsync<FoodEntry>(
@@ -205,10 +190,6 @@ export async function addQuickEntry(
   );
 }
 
-/**
- * Changes the amount of a gram-based entry. Values are scaled from the entry
- * itself, so this works even if the food was edited or deleted since.
- */
 export async function updateEntryGrams(
   db: SQLiteDatabase,
   id: number,

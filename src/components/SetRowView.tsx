@@ -11,9 +11,7 @@ export type SetValues = { weight: number | null; reps: number | null; done: bool
 type Props = {
   index: number;
   set: SetRow;
-  /** The matching set from the last session (shown in the "Anterior" column). */
   previous?: SetRow;
-  /** Suggested values used when the set is ticked with empty fields. */
   suggestion: { weight: number | null; reps: number | null } | null;
   onChange: (values: SetValues) => void;
   onDelete: () => void;
@@ -45,7 +43,7 @@ export function SetRowView({ index, set, previous, suggestion, onChange, onDelet
     let r = reps;
     if (w === '' && suggestion?.weight != null) w = formatWeight(suggestion.weight);
     if (r === '' && suggestion?.reps != null) r = String(suggestion.reps);
-    if (r === '') return; // nothing to record yet
+    if (r === '') return;
     setWeight(w);
     setReps(r);
     setDone(true);

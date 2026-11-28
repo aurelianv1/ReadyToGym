@@ -288,10 +288,6 @@ export default function ActiveWorkoutScreen() {
   );
 }
 
-/**
- * What to suggest for set `i`: the same set from last session, otherwise the
- * closest set above it that has already been filled in.
- */
 function suggestFor(current: SetRow[], previous: SetRow[], i: number) {
   const p = previous[i];
   if (p?.reps != null) return { weight: p.weight, reps: p.reps };
@@ -303,7 +299,6 @@ function suggestFor(current: SetRow[], previous: SetRow[], i: number) {
   return last?.reps != null ? { weight: last.weight, reps: last.reps } : null;
 }
 
-/** Self-updating mm:ss clock, isolated so the whole screen doesn't re-render every second. */
 function Clock({ since, style }: { since: number; style: object }) {
   const [now, setNow] = useState(Date.now());
   useEffect(() => {

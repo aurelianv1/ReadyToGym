@@ -45,7 +45,6 @@ const SEED_EXERCISES: [name: string, muscleGroup: string][] = [
   ['Ridicări de picioare la bară', 'Abdomen'],
 ];
 
-/** Creates / upgrades the schema. Runs once at startup via <SQLiteProvider onInit>. */
 export async function migrateDbIfNeeded(db: SQLiteDatabase) {
   await db.execAsync('PRAGMA journal_mode = WAL; PRAGMA foreign_keys = ON;');
 
@@ -159,8 +158,6 @@ export async function migrateDbIfNeeded(db: SQLiteDatabase) {
     `);
     currentVersion = 3;
   }
-
-  // Future migrations go here: if (currentVersion === 3) { ...; currentVersion = 4; }
 
   await db.execAsync(`PRAGMA user_version = ${DATABASE_VERSION}`);
 }

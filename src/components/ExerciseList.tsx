@@ -12,7 +12,6 @@ type Props = {
   onCreate: (name: string) => void;
 };
 
-/** Searchable, filterable list of exercises — used by the Exercises tab and the picker. */
 export function ExerciseList({ exercises, onSelect, onCreate }: Props) {
   const [query, setQuery] = useState('');
   const [group, setGroup] = useState<string | null>(null);

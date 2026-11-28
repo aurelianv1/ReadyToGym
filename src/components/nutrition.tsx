@@ -10,7 +10,6 @@ export const MACRO_INFO = [
   { key: 'fat', label: 'Grăsimi', short: 'G', color: colors.fat },
 ] as const;
 
-/** Thousands separator: 2600 -> "2.600" */
 export function formatKcal(kcal: number) {
   return Math.round(kcal).toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.');
 }
@@ -69,7 +68,6 @@ export function MacroBar({
   );
 }
 
-/** Compact "P 30 · C 45 · G 7" line. */
 export function MacroLine({ m, style }: { m: Macros; style?: object }) {
   return (
     <Text style={[styles.macroLine, style]}>

@@ -44,7 +44,6 @@ export default function WorkoutDetailsScreen() {
   async function onSaveAsRoutine() {
     if (!workout) return;
     const routineId = await createRoutineFromWorkout(db, workoutId, workout.name);
-    // Open the editor so the routine can be renamed or adjusted right away.
     router.push({ pathname: '/routine/edit', params: { id: String(routineId) } });
   }
 

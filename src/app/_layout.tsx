@@ -5,8 +5,6 @@ import { StatusBar } from 'expo-status-bar';
 import { migrateDbIfNeeded } from '@/db/schema';
 import { colors } from '@/theme';
 
-// Keep this file name even though the app was renamed (Jurnal Sală -> ReadyToGym):
-// changing it would start with an empty database and lose all logged workouts.
 const DATABASE_NAME = 'jurnal-sala.db';
 
 const theme = {

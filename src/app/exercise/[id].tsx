@@ -109,7 +109,6 @@ export default function ExerciseDetailsScreen() {
   );
 }
 
-/** Simple bar chart drawn with Views — no chart library needed. */
 function ProgressChart({ sessions }: { sessions: ExerciseSession[] }) {
   const points = sessions.map((s) => ({
     label: formatShortDate(s.started_at),
@@ -117,7 +116,6 @@ function ProgressChart({ sessions }: { sessions: ExerciseSession[] }) {
   }));
   const max = Math.max(1, ...points.map((p) => p.value));
   const min = Math.min(...points.map((p) => p.value));
-  // Start the scale a bit below the lowest value so small gains are visible.
   const floor = points.length > 1 ? Math.max(0, min - (max - min) * 0.5 - 1) : 0;
 
   return (

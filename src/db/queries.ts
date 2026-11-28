@@ -48,8 +48,6 @@ export const MUSCLE_GROUPS = ['Piept', 'Spate', 'Picioare', 'Umeri', 'Brațe', '
 
 const DEFAULT_SET_COUNT = 3;
 
-// ---------- Workouts ----------
-
 function defaultWorkoutName(date = new Date()) {
   const h = date.getHours();
   if (h < 12) return 'Antrenament de dimineață';
@@ -104,11 +102,6 @@ export async function getWorkoutExercises(db: SQLiteDatabase, workoutId: number)
   }));
 }
 
-/**
- * Finishes a workout: drops sets that were never filled in and exercises left
- * without sets. Returns the number of sets kept (0 means the workout was empty
- * and has been deleted).
- */
 export async function finishWorkout(db: SQLiteDatabase, workoutId: number) {
   let kept = 0;
   await db.withTransactionAsync(async () => {
@@ -180,9 +173,6 @@ export async function getHomeStats(db: SQLiteDatabase) {
   return { thisWeek: week?.n ?? 0, total: total?.n ?? 0 };
 }
 
-// ---------- Exercises inside a workout ----------
-
-/** Sets from the most recent finished workout that contained this exercise. */
 export async function getPreviousSets(
   db: SQLiteDatabase,
   exerciseId: number,
@@ -214,7 +204,6 @@ export async function addExerciseToWorkout(
   await db.withTransactionAsync(() => insertWorkoutExercise(db, workoutId, exerciseId, setCount));
 }
 
-/** Appends an exercise with `setCount` empty sets. Caller is responsible for the transaction. */
 async function insertWorkoutExercise(
   db: SQLiteDatabase,
   workoutId: number,
@@ -244,8 +233,6 @@ export async function removeWorkoutExercise(db: SQLiteDatabase, workoutExerciseI
   await db.runAsync('DELETE FROM workout_exercises WHERE id = ?', workoutExerciseId);
 }
 
-// ---------- Sets ----------
-
 export async function addSet(db: SQLiteDatabase, workoutExerciseId: number) {
   await db.runAsync(
     `INSERT INTO sets (workout_exercise_id, position)
@@ -273,8 +260,6 @@ export async function deleteSet(db: SQLiteDatabase, setId: number) {
   await db.runAsync('DELETE FROM sets WHERE id = ?', setId);
 }
 
-// ---------- Exercise library ----------
-
 export function listExercises(db: SQLiteDatabase) {
   return db.getAllAsync<Exercise>('SELECT * FROM exercises ORDER BY name COLLATE NOCASE');
 }
@@ -283,14 +268,11 @@ export function getExercise(db: SQLiteDatabase, id: number) {
   return db.getFirstAsync<Exercise>('SELECT * FROM exercises WHERE id = ?', id);
 }
 
-/** Lowercase, trimmed, without diacritics — used to compare exercise names. */
 export function normalizeName(s: string) {
   return s.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase().trim();
 }
 
-/** Returns the new id, or null if an exercise with this name already exists. */
 export async function createExercise(db: SQLiteDatabase, name: string, muscleGroup: string) {
-  // SQLite's NOCASE only folds ASCII, so compare in JS to catch "Împins" vs "împins" / "impins".
   const all = await db.getAllAsync<{ name: string }>('SELECT name FROM exercises');
   const key = normalizeName(name);
   if (all.some((e) => normalizeName(e.name) === key)) return null;
@@ -306,7 +288,6 @@ export async function deleteExercise(db: SQLiteDatabase, id: number) {
   await db.runAsync('DELETE FROM exercises WHERE id = ?', id);
 }
 
-/** All finished sessions for an exercise, newest first. */
 export async function getExerciseHistory(db: SQLiteDatabase, exerciseId: number) {
   const rows = await db.getAllAsync<SetRow & { workout_id: number; started_at: number }>(
     `SELECT s.*, w.id AS workout_id, w.started_at
@@ -328,8 +309,6 @@ export async function getExerciseHistory(db: SQLiteDatabase, exerciseId: number)
   }
   return sessions;
 }
-
-// ---------- Routines ----------
 
 export type Routine = {
   id: number;
@@ -379,7 +358,6 @@ export async function getRoutine(db: SQLiteDatabase, id: number) {
   return { ...routine, items: await getRoutineItems(db, id) };
 }
 
-/** Creates (no id) or overwrites (with id) a routine. Returns its id. */
 export async function saveRoutine(
   db: SQLiteDatabase,
   routine: { id?: number; name: string; items: { exercise_id: number; set_count: number }[] },
@@ -415,10 +393,6 @@ export async function deleteRoutine(db: SQLiteDatabase, id: number) {
   await db.runAsync('DELETE FROM routines WHERE id = ?', id);
 }
 
-/**
- * Starts a workout pre-filled with the routine's exercises and set counts.
- * Returns null if another workout is already in progress.
- */
 export async function startWorkoutFromRoutine(db: SQLiteDatabase, routineId: number) {
   if (await getActiveWorkout(db)) return null;
   const routine = await getRoutine(db, routineId);
@@ -440,7 +414,6 @@ export async function startWorkoutFromRoutine(db: SQLiteDatabase, routineId: num
   return workoutId;
 }
 
-/** Saves the exercises of a (finished) workout as a new routine. Returns the routine id. */
 export async function createRoutineFromWorkout(db: SQLiteDatabase, workoutId: number, name: string) {
   const exercises = await getWorkoutExercises(db, workoutId);
   return saveRoutine(db, {

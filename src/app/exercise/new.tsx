@@ -25,7 +25,6 @@ export default function NewExerciseScreen() {
       return;
     }
     if (params.mode === 'callback') {
-      // Opened from the picker on behalf of the routine editor: hand it back and close both modals.
       const exercise = await getExercise(db, id);
       if (exercise) deliverPick(exercise);
       router.dismiss(2);
